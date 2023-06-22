@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <link rel="stylesheet" href="file1.css">
+
+</head>
+
+<body>
+	<form>
+		<div class ="form">
+			<legend>Training Form</legend>
+
+			
+			<p>
+				<label>First name: <input name="firstName"  id ="firstNameInput"/></label>
+			</p>
+
+			<p>
+				<label>Last name: <input name="lastName" id ="lastNameInput" /></label>
+			</p>
+           
+
+
+
+			<p>
+				<label>Phone number: <input name="phonenumber"  id ="phoneNumberInput"/></label>
+			</p>
+
+
+
+			
+
+			<p>
+				<label>Email:<input type="email"
+									name="email" id ="emailInput" />
+				</label>
+			</p>
+
+            <label>
+                Major
+                <br />
+                <select name="Major"  id="majorInput">
+                    <option>--None--</option>
+                    <option>C.E</option>
+                    <option>CS</option>
+                    <option>MIS</option>
+                    <option>CIS</option>
+                    <option>CAP</option>
+                </select>
+            </label>
+<br>
+
+            <label>
+             Training Area
+                <br />
+                <select name=" Training Area"   id="trainingAreaInput">
+                    <option>--None--</option>
+                    <option>DB</option>
+                    <option>AI</option>
+                    <option>WD</option>
+                   
+                </select>
+            </label>
+
+
+			<p>
+				<button type="submit"  id ="submitBtn">Submit</button>
+			</p>
+
+		<div>
+	</form>
+    <script>
+		document.getElementById("submitBtn").addEventListener("click", function(event) {
+			event.preventDefault(); // Prevent form submission
+
+			// Check if any of the input fields are empty
+			var firstName = document.getElementById("firstNameInput").value;
+			var lastName = document.getElementById("lastNameInput").value;
+			var phoneNumber = document.getElementById("phoneNumberInput").value;
+			var email = document.getElementById("emailInput").value;
+			var major = document.getElementById("majorInput").value;
+			var trainingArea = document.getElementById("trainingAreaInput").value;
+
+			if (
+				firstName === "" ||
+				lastName === "" ||
+				phoneNumber === "" ||
+				email === "" ||
+				major === "--None--" ||
+				trainingArea === "--None--"
+			) {
+				alert("Please fill in all the required fields.");
+			} else {
+				alert("Thank you, your form is submitted successfuly");
+			}
+		});
+	</script>
+</body>
+</html>
