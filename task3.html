@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do App</title>
+  <link rel="stylesheet" type="text/css" href="task3.css">
+  
+</head>
+<body>
+  <header>
+    <h1>To-Do App</h1>
+  </header>
+
+  <div class="container">
+    <input type="text" id="taskInput" placeholder="Enter a to-do item">
+    <button id="btn">Add</button>
+  </div>
+
+  <div id="wrapper">
+    <ul id="taskList">
+    </ul>
+
+    <button id="clearBtn">Clear </button>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const addButton = document.getElementById('btn');
+    const clearButton = document.getElementById('clearBtn');
+
+    addButton.addEventListener('click', addItem);
+    clearButton.addEventListener('click', clearAllItems);
+
+    function addItem() {
+      const newItem = document.createElement('li');
+
+      const checkboxLabel = document.createElement('label');
+      checkboxLabel.classList.add('checkbox-label');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.addEventListener('change', function() {
+        label.style.textDecoration = this.checked ? 'line-through' : 'none';
+        updateStoredTasks();
+      });
+
+      const label = document.createElement('label');
+      label.classList.add('item-label');
+      label.textContent = taskInput.value;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.id = 'dbtn';
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', function() {
+        newItem.remove();
+        updateStoredTasks();
+      });
+
+      checkboxLabel.appendChild(checkbox);
+      newItem.appendChild(checkboxLabel);
+      newItem.appendChild(label);
+      newItem.appendChild(deleteBtn);
+      taskList.appendChild(newItem);
+
+      taskInput.value = '';
+      taskInput.placeholder = '';
+      
+
+      updateStoredTasks();
+      
+
+
+      
+
+
+
+
+
+    }
+
+    function clearAllItems() {
+      if (taskList.children.length === 0) {
+        alert('No items to delete.');
+        return;
+      }
+
+      if (confirm('Are you sure you want to delete all items?')) {
+        while (taskList.firstChild) {
+          taskList.removeChild(taskList.firstChild);
+        }
+
+        updateStoredTasks();
+      }
+    }
+
+    function updateStoredTasks() {
+      const tasks = Array.from(taskList.children).map(task => task.querySelector('.item-label').textContent);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Retrieve stored tasks on page load
+    function retrieveTasks() {
+      const storedTasks = localStorage.getItem('tasks');
+      if (storedTasks) {
+        const tasks = JSON.parse(storedTasks);
+        tasks.forEach(task => {
+          addItemFromStorage(task);
+        });
+      }
+    }
+
+    // Add a task from stored tasks
+    function addItemFromStorage(task) {
+      const newItem = document.createElement('li');
+
+      const checkboxLabel = document.createElement('label');
+      checkboxLabel.classList.add('checkbox-label');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.addEventListener('change', function() {
+        label.style.textDecoration = this.checked ? 'line-through' : 'none';
+        updateStoredTasks();
+      });
+
+      const label = document.createElement('label');
+      label.classList.add('item-label');
+      label.textContent = task;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.id = 'dbtn';
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', function() {
+        newItem.remove();
+        updateStoredTasks();
+      });
+
+      checkboxLabel.appendChild(checkbox);
+      newItem.appendChild(checkboxLabel);
+      newItem.appendChild(label);
+      newItem.appendChild(deleteBtn);
+      taskList.appendChild(newItem);
+    }
+
+    document.addEventListener('DOMContentLoaded', retrieveTasks);
+  </script>
+</body>
+</html>
