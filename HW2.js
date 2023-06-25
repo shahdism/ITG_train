@@ -4,7 +4,6 @@
 function createAccount() {
     document.body.innerHTML = '';
 
-    // Create the account form
     var formContainer = document.createElement('div');
     formContainer.className = 'container';
 
@@ -85,10 +84,8 @@ function submitForm(event) {
         return;
     }
 
-    // Clear the page content
     document.body.innerHTML = '';
 
-    // Create the ordering form
     var orderContainer = document.createElement('div');
     orderContainer.className = 'container order-container';
 
@@ -156,7 +153,6 @@ function placeOrder(event) {
 
     var date = new Date().toDateString();
 
-    // Clear the page content
     document.body.innerHTML = '';
 
     // Display the receipt
