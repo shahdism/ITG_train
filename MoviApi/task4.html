@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Search App</title>
+  <link rel="stylesheet" href="task4.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Movie Search App</h1>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Enter a movie title">
+      <button id="search-button">Search</button>
+    </div>
+    <div id="results-container"></div>
+    <div id="movie-details"></div>
+  </div>
+
+  <script>
+    // Add an event listener to the search button
+    document.getElementById('search-button').addEventListener('click', function() {
+      var searchTerm = document.getElementById('search-input').value.trim();
+
+      if (searchTerm === '') {
+        alert('Please enter a movie title.');
+        return;
+      }
+
+      // Make the API request using the searchTerm
+      var apiKey = '0be4c7bf60611a5b5c852fb7008974b0';
+      var url = 'https://api.themoviedb.org/3/search/movie?api_key=' + apiKey + '&query=' + searchTerm;
+
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          // Process the API response and update the results container
+          displayMovieResults(data);
+        })
+        .catch(function(error) {
+          console.log('Error:', error);
+          alert('An error occurred while fetching movie data. Please try again later.');
+        });
+    });
+
+    // Function to display the search results
+    function displayMovieResults(data) {
+      var resultsContainer = document.getElementById('results-container');
+      var movieDetailsContainer = document.getElementById('movie-details');
+
+      // Clear previous results
+      resultsContainer.innerHTML = '';
+      movieDetailsContainer.innerHTML = '';
+
+      // Display search results
+      if (data.results.length === 0) {
+        resultsContainer.innerHTML = 'No results found.';
+      } else {
+        data.results.forEach(function(movie) {
+          var resultItem = document.createElement('div');
+          resultItem.classList.add('result-item');
+
+          var titleElement = document.createElement('h3');
+          titleElement.textContent = movie.title;
+          resultItem.appendChild(titleElement);
+
+          var imageElement = document.createElement('img');
+          imageElement.src = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
+          imageElement.alt = movie.title;
+          resultItem.appendChild(imageElement);
+
+          resultsContainer.appendChild(resultItem);
+
+          // Add click event listener to display movie details
+          resultItem.addEventListener('click', function() {
+            displayMovieDetails(movie.id);
+          });
+        });
+      }
+    }
+
+    // Function to display the movie details
+    function displayMovieDetails(movieId) {
+      var apiKey = '0be4c7bf60611a5b5c852fb7008974b0';
+      var url = 'https://api.themoviedb.org/3/movie/' + movieId + '?api_key=' + apiKey;
+
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          // Update the movie details container with the fetched data
+          var movieDetailsContainer = document.getElementById('movie-details');
+          movieDetailsContainer.innerHTML = '<h2>' + data.title + '</h2>' +
+            '<p>Release Year: ' + data.release_date.slice(0, 4) + '</p>' +
+            '<p>Plot Summary: ' + data.overview + '</p>' +
+            '<p>Rating: ' + data.vote_average + '</p>' +
+            '<img src="https://image.tmdb.org/t/p/w500' + data.poster_path + '" alt="' + data.title + '">';
+
+          // Fetch and display similar movies
+          fetchSimilarMovies(movieId, apiKey);
+        })
+        .catch(function(error) {
+          console.log('Error:', error);
+          alert('An error occurred while fetching movie details. Please try again later.');
+        });
+    }
+
+    // Function to fetch and display similar movies
+    function fetchSimilarMovies(movieId, apiKey) {
+      var url = 'https://api.themoviedb.org/3/movie/' + movieId + '/similar?api_key=' + apiKey;
+
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          // Update the results container with similar movies
+          var resultsContainer = document.getElementById('results-container');
+          resultsContainer.innerHTML = '<h3>Similar Movies</h3>';
+
+          if (data.results.length === 0) {
+            var noResultsItem = document.createElement('div');
+            noResultsItem.textContent = 'No similar movies found.';
+            noResultsItem.classList.add('result-item');
+            resultsContainer.appendChild(noResultsItem);
+          } else {
+            data.results.forEach(function(movie) {
+              var resultItem = document.createElement('div');
+              resultItem.textContent = movie.title;
+              resultItem.classList.add('result-item');
+              resultsContainer.appendChild(resultItem);
+
+              // Add click event listener to display movie details
+              resultItem.addEventListener('click', function() {
+                displayMovieDetails(movie.id);
+              });
+            });
+          }
+        })
+        .catch(function(error) {
+          console.log('Error:', error);
+          alert('An error occurred while fetching similar movies. Please try again later.');
+        });
+    }
+  </script>
+</body>
+</html>
