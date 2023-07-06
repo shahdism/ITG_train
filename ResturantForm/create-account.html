@@ -1,0 +1,54 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <title>Create Account</title>
+  <link rel="stylesheet" type="text/css" href="HW2.css">
+  <script src="HW2.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Create Account</h1>
+    <form id="createAccountForm" onsubmit="validateForm(event)">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+        <div id="name-error" class="error-message"></div>
+
+      </div>
+
+      <div>
+
+    
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+        <div id="email-error" class="error-message"></div>
+
+      </div>
+
+
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+        <div id="password-error" class="error-message"></div>
+
+      </div>
+
+      <div>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" pattern="[0-9]{10}" required>
+        <div id="phone-error" class="error-message"></div>
+
+      </div>
+
+      <div>
+        <input type="submit" value="Submit">
+      </div>
+      </form>
+      
+      
+    <p>Already have an account? <a href="ordering.html">Order Now</a></p>
+  </div>
+</body>
+</html> 
+
+    

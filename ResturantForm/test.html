@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Validation Example</title>
+  <style>
+    .error-message {
+      color: red;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Form Validation Example</h1>
+  <form onsubmit="return validateForm()">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" placeholder="Enter your name">
+      <div id="name-error" class="error-message"></div>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="Enter your email">
+      <div id="email-error" class="error-message"></div>
+    </div>
+    <div>
+      <label for="message">Message:</label>
+      <textarea id="message" placeholder="Enter your message"></textarea>
+      <div id="message-error" class="error-message"></div>
+    </div>
+    <div>
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+
+  <script>
+    function validateForm() {
+      const nameInput = document.getElementById('name');
+      const emailInput = document.getElementById('email');
+      const messageInput = document.getElementById('message');
+
+      const nameError = document.getElementById('name-error');
+      const emailError = document.getElementById('email-error');
+      const messageError = document.getElementById('message-error');
+
+      nameError.textContent = '';
+      emailError.textContent = '';
+      messageError.textContent = '';
+
+      let isValid = true;
+
+      if (nameInput.value.trim() === '') {
+        nameError.textContent = 'Please enter your name.';
+        isValid = false;
+      }
+
+      if (emailInput.value.trim() === '') {
+        emailError.textContent = 'Please enter your email.';
+        isValid = false;
+      }
+
+      if (messageInput.value.trim() === '') {
+        messageError.textContent = 'Please enter your message.';
+        isValid = false;
+      }
+
+      return isValid;
+    }
+  </script>
+</body>
+</html>

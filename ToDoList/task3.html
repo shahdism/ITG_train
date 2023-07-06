@@ -13,6 +13,8 @@
   <div class="container">
     <input type="text" id="taskInput" placeholder="Enter a to-do item">
     <button id="btn">Add</button>
+    <p id="errorMessage" class="error-message"></p> 
+
   </div>
 
   <div id="wrapper">
@@ -26,12 +28,24 @@
     const taskInput = document.getElementById('taskInput');
     const taskList = document.getElementById('taskList');
     const addButton = document.getElementById('btn');
+    const errorMessage = document.getElementById('errorMessage');
+
     const clearButton = document.getElementById('clearBtn');
 
     addButton.addEventListener('click', addItem);
     clearButton.addEventListener('click', clearAllItems);
 
     function addItem() {
+
+      if (taskInput.value==="")
+      {
+
+        errorMessage.textContent = 'Please enter a to-do item.'; // Display error message
+        return;
+      }
+      else{
+        errorMessage.textContent = ''; // Clear error message
+
       const newItem = document.createElement('li');
 
       const checkboxLabel = document.createElement('label');
@@ -69,7 +83,7 @@
       updateStoredTasks();
       
 
-
+    }
       
 
 
