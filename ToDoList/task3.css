@@ -90,7 +90,6 @@ li:last-child {
   background-color: rgb(164, 20, 20);
   color: white;
 }
- /* Updated CSS styles */
  .container {
   display: flex;
   justify-content: space-between;
@@ -115,7 +114,6 @@ li:last-child {
     flex-direction: column;
     align-items: stretch;
   }}
-/* Add a wrapper div to contain the task list */
 #wrapper {
   margin-bottom: 50px;
 }
