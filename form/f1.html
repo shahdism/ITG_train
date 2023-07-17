@@ -1,78 +1,79 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-    <link rel="stylesheet" href="file1.css">
-
+	<link rel="stylesheet" href="file1.css">
+	<style>
+		.error {
+			color: red;
+		}
+	</style>
 </head>
 
 <body>
 	<form>
-		<div class ="form">
+		<div class="form">
 			<legend>Training Form</legend>
 
-			
 			<p>
-				<label>First name: <input name="firstName"  id ="firstNameInput"/></label>
+				<label>First name: <input name="firstName" id="firstNameInput" required/></label>
+				<span id="firstNameError" class="error"></span>
 			</p>
 
 			<p>
-				<label>Last name: <input name="lastName" id ="lastNameInput" /></label>
-			</p>
-           
-
-
-
-			<p>
-				<label>Phone number: <input name="phonenumber"  id ="phoneNumberInput"/></label>
+				<label>Last name: <input name="lastName" id="lastNameInput" required/></label>
+				<span id="lastNameError" class="error"></span>
 			</p>
 
-
-
-			
+			<p>
+				<label>Phone number: <input name="phonenumber" id="phoneNumberInput" required/></label>
+				<span id="phoneNumberError" class="error"></span>
+			</p>
 
 			<p>
-				<label>Email:<input type="email"
-									name="email" id ="emailInput" />
+				<label>Email: <input type="email" name="email" id="emailInput" required/></label>
+				<span id="emailError" class="error"></span>
+			</p>
+
+			<p>
+				<label>
+					Major<br>
+					<select name="Major" id="majorInput" required>
+						<option value="">--None--</option>
+						<option value="C.E">C.E</option>
+						<option value="CS">CS</option>
+						<option value="MIS">MIS</option>
+						<option value="CIS">CIS</option>
+						<option value="CAP">CAP</option>
+					</select>
 				</label>
+				<span id="majorError" class="error"></span>
 			</p>
-
-            <label>
-                Major
-                <br />
-                <select name="Major"  id="majorInput">
-                    <option>--None--</option>
-                    <option>C.E</option>
-                    <option>CS</option>
-                    <option>MIS</option>
-                    <option>CIS</option>
-                    <option>CAP</option>
-                </select>
-            </label>
-<br>
-
-            <label>
-             Training Area
-                <br />
-                <select name=" Training Area"   id="trainingAreaInput">
-                    <option>--None--</option>
-                    <option>DB</option>
-                    <option>AI</option>
-                    <option>WD</option>
-                   
-                </select>
-            </label>
-
 
 			<p>
-				<button type="submit"  id ="submitBtn">Submit</button>
+				<label>
+					Training Area<br>
+					<select name="Training Area" id="trainingAreaInput" required>
+						<option value="">--None--</option>
+						<option value="DB">DB</option>
+						<option value="AI">AI</option>
+						<option value="WD">WD</option>
+					</select>
+				</label>
+				<span id="trainingAreaError" class="error"></span>
 			</p>
 
-		<div>
+			<p>
+				<button type="submit" id="submitBtn">Submit</button>
+			</p>
+
+		</div>
 	</form>
-    <script>
+
+	<script>
 		document.getElementById("submitBtn").addEventListener("click", function(event) {
-		
+			event.preventDefault();
 
 			// Check if any of the input fields are empty
 			var firstName = document.getElementById("firstNameInput").value;
@@ -82,19 +83,71 @@
 			var major = document.getElementById("majorInput").value;
 			var trainingArea = document.getElementById("trainingAreaInput").value;
 
-			if (
-				firstName === "" ||
-				lastName === "" ||
-				phoneNumber === "" ||
-				email === "" ||
-				major === "--None--" ||
-				trainingArea === "--None--"
-			) {
-				alert("Please fill in all the required fields.");
+			var isValid = true;
+
+			if (firstName === "") {
+				document.getElementById("firstNameError").textContent = "Please enter your first name.";
+				isValid = false;
 			} else {
-				alert("Thank you, your form is submitted successfuly");
+				document.getElementById("firstNameError").textContent = "";
+			}
+
+			if (lastName === "") {
+				document.getElementById("lastNameError").textContent = "Please enter your last name.";
+				isValid = false;
+			} else {
+				document.getElementById("lastNameError").textContent = "";
+			}
+
+			if (phoneNumber === "") {
+				document.getElementById("phoneNumberError").textContent = "Please enter your phone number.";
+				isValid = false;
+			} else if (!isValidPhoneNumber(phoneNumber)) {
+				document.getElementById("phoneNumberError").textContent = "Please enter a valid phone number.";
+				isValid = false;
+			} else {
+				document.getElementById("phoneNumberError").textContent = "";
+			}
+
+			if (email === "") {
+				document.getElementById("emailError").textContent = "Please enter your email.";
+				isValid = false;
+			} else if (!isValidEmail(email)) {
+				document.getElementById("emailError").textContent = "Please enter a valid email address.";
+				isValid = false;
+			} else {
+				document.getElementById("emailError").textContent = "";
+			}
+
+			if (major === "") {
+				document.getElementById("majorError").textContent = "Please select a major.";
+				isValid = false;
+			} else {
+				document.getElementById("majorError").textContent = "";
+			}
+
+			if (trainingArea === "") {
+				document.getElementById("trainingAreaError").textContent = "Please select a training area.";
+				isValid = false;
+			} else {
+				document.getElementById("trainingAreaError").textContent = "";
+			}
+
+			if (isValid) {
+				document.getElementById("submitBtn").disabled = true;
+				document.getElementById("submitBtn").textContent = "Submitted";
 			}
 		});
+
+		function isValidPhoneNumber(phoneNumber) {
+			var phoneNumberPattern = /^\d{10}$/;
+			return phoneNumberPattern.test(phoneNumber);
+		}
+
+		function isValidEmail(email) {
+			var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return emailPattern.test(email);
+		}
 	</script>
 </body>
 </html>
