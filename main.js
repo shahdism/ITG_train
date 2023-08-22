@@ -1,7 +1,7 @@
-require('dotenv').config();
+require('dotenv').config(); // loads environment variables from a .env file
 const express=require ( 'express');
 const mongoose= require( 'mongoose');
-const session =require( 'express-session');
+const session =require( 'express-session');//middleware for session management.
 const path = require('path');
 
 const app =express();
