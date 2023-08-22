@@ -1,4 +1,4 @@
-// Validate user input for adding a new user
+//  validate user input data before adding a new user to the database
 function validateUserInput(data) {
     const errors = {};
   

@@ -2,13 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/user');
-const multer = require('multer');
-const fs = require('fs');
+const multer = require('multer');// middleware store image in server
+const fs = require('fs'); // file system
 const validationUtils = require('../utils/validation');
 
 
 // Upload image
-const storage = multer.diskStorage({
+const storage = multer.diskStorage({ // where should store the uploded image
   destination: function(req, file, cb) {
     cb(null, './uplodes');
   },
@@ -16,12 +16,13 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
   },
 });
-const upload = multer({storage: storage}).single('image');
+const upload = multer({storage: storage}).single('image'); //
+
 
 // Upload to database
 router.post('/add', upload, async (req, res) => {
   try {
-    const errors = validationUtils.validateUserInput(req.body); // Validate user input
+    const errors = validationUtils.validateUserInput(req.body); // Validate the user input data that was sent in the request's body
     if (Object.keys(errors).length > 0) {
       // Render the view with errors and form data
       return res.render('add_users', {
@@ -30,7 +31,6 @@ router.post('/add', upload, async (req, res) => {
         formData: req.body,
       });
     }
-
     const user = new User({
       name: req.body.name,
       email: req.body.email,
@@ -38,11 +38,6 @@ router.post('/add', upload, async (req, res) => {
       image: req.file.filename,
     });
     await user.save();
-
-    req.session.message = {
-      type: 'success',
-      message: 'User added successfully',
-    };
     res.redirect('/');
   } catch (err) {
     res.status(500).json({message: 'An error occurred while processing your request.'});
@@ -50,7 +45,7 @@ router.post('/add', upload, async (req, res) => {
 });
 
 
-// get useres from data base
+
 // get users from the database
 router.get('/', async (req, res) => {
   try {
@@ -79,7 +74,7 @@ router.get('/delete/:id', async (req, res) => {
     if (result.image !== '') {
       try {
         fs.unlinkSync('./uplodes/' + result.image);
-      } catch (err) {
+      } catch (err) { // if there is an image , delete it from uplodes
         console.log(err);
       }
     }
