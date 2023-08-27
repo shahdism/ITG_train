@@ -10,34 +10,27 @@
                     <h5 class="text-light">Add New User</h5>
                 </div>
                 <div class="card-body p-4">
+                    <div id="message"></div> <!-- General message element -->
                     <form action="/add" method="post" id="add-form" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="name">Name</label>
                             <input type="text" name="name" class="form-control form-control-lg" placeholder="Enter Name" required />
-                            <% if (errors && errors.name) { %>
-                            <div class="text-danger"><%= errors.name %></div>
-                            <% } %>
+                            <div class="text-danger" id="error-name" data-error="name"></div> <!-- Error message for name -->
                         </div>
                         <div class="mb-3">
                             <label for="email">Email</label>
                             <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter Email" required />
-                            <% if (errors && errors.email) { %>
-                            <div class="text-danger"><%= errors.email %></div>
-                            <% } %>
+                            <div class="text-danger" id="error-email" data-error="email"></div> <!-- Error message for email -->
                         </div>
                         <div class="mb-3">
                             <label for="phone">Phone</label>
                             <input type="tel" name="phone" class="form-control form-control-lg" placeholder="Enter Phone" required />
-                            <% if (errors && errors.phone) { %>
-                            <div class="text-danger"><%= errors.phone %></div>
-                            <% } %>
+                            <div class="text-danger" id="error-phone" data-error="phone"></div> <!-- Error message for phone -->
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label">Select Image</label>
                             <input type="file" name="image" class="form-control form-control-lg" required />
-                            <% if (errors && errors.image) { %>
-                            <div class="text-danger"><%= errors.image %></div>
-                            <% } %>
+                            <div class="text-danger" id="error-image" data-error="image"></div> <!-- Error message for image -->
                         </div>
                         <div class="mb-3">
                             <input type="submit" name="submit" value="Add User" class="btn btn-primary btn-lg" />
@@ -48,3 +41,65 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('add-form');
+        const messageElement = document.getElementById('message');
+
+        // Add focus event listeners to clear error messages
+        const inputFields = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+        inputFields.forEach(input => {
+            input.addEventListener('focus', () => {
+                const fieldName = input.getAttribute('name');
+                const errorElement = document.getElementById(`error-${fieldName}`);
+                errorElement.textContent = ''; // Clear the error message
+            });
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            try {
+                const response = await fetch('/add', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('User added Successfuly');
+                    console.log('added succesfuly');
+                    messageElement.textContent = 'User added successfully.';
+
+                    form.reset();
+
+                } else if (response.status === 400) {
+                    if (data.errors) {
+                        for (const fieldName in data.errors) {
+
+                            const errorElement = form.querySelector(`[data-error="${fieldName}"]`);
+                            const errorMessage = data.errors[fieldName];
+                            errorElement.textContent = errorMessage;
+                        }
+                    } else if (data.message) {
+                        messageElement.textContent = data.message;
+
+                    }
+                } else {
+                    messageElement.textContent = 'An error occurred while processing your request.';
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    
+    
+    });
+
+
+</script>
+

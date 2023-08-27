@@ -2,21 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const User = require('../models/user');
-const multer = require('multer');// middleware store image in server
 const fs = require('fs'); // file system
 const validationUtils = require('../utils/validation');
-
-
-// Upload image
-const storage = multer.diskStorage({ // where should store the uploded image
-  destination: function(req, file, cb) {
-    cb(null, './uplodes');
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.fieldname + '_' + Date.now() + '_' + file.originalname);
-  },
-});
-const upload = multer({storage: storage}).single('image'); //
+const upload = require('../utils/addimg.js'); // Adjust the path based on your project structure
 
 
 // Upload to database
@@ -25,10 +13,9 @@ router.post('/add', upload, async (req, res) => {
     const errors = validationUtils.validateUserInput(req.body); // Validate the user input data that was sent in the request's body
     if (Object.keys(errors).length > 0) {
       // Render the view with errors and form data
-      return res.render('add_users', {
-        title: 'Add User',
-        errors: errors,
-        formData: req.body,
+      return res.status(400).json({ 
+        message: 'Validation failed. Please check the form for errors.',
+        errors: errors 
       });
     }
     const user = new User({
@@ -38,7 +25,7 @@ router.post('/add', upload, async (req, res) => {
       image: req.file.filename,
     });
     await user.save();
-    res.redirect('/');
+    
   } catch (err) {
     res.status(500).json({message: 'An error occurred while processing your request.'});
   }
@@ -58,6 +45,8 @@ router.get('/', async (req, res) => {
     res.json({message: err.message});
   }
 });
+
+// form page
 router.get('/add', (req, res) => {
   res.render('add_users', {
     title: 'Add User',
@@ -65,27 +54,27 @@ router.get('/add', (req, res) => {
   });
 });
 
-
-router.get('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const result = await User.findByIdAndRemove(id);
+    const user = await User.findByIdAndRemove(id);
 
-    if (result.image !== '') {
-      try {
-        fs.unlinkSync('./uplodes/' + result.image);
-      } catch (err) { // if there is an image , delete it from uplodes
-        console.log(err);
+    if (user) {
+      if (user.image !== '') {
+        try {
+          fs.unlinkSync('./uplodes/' + user.image); 
+          //console.log(`Deleted image: ${user.image}`);
+        } catch (err) {
+          console.error(`Error deleting image: ${err}`);
+        }
       }
+      res.status(200).json({ success: true, message: 'User deleted successfully' });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
     }
-
-    req.session.message = {
-      type: 'info',
-      message: 'User deleted successfully',
-    };
-    res.redirect('/');
   } catch (err) {
-    res.json({message: err.message});
+    console.error(`Error deleting user: ${err}`);
+    res.status(500).json({ success: false, message: 'An error occurred' });
   }
 });
 

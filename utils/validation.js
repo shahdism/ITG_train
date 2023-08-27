@@ -1,4 +1,4 @@
-//  validate user input data before adding a new user to the database
+//  validate user input data before adding a new user to the database YUP
 function validateUserInput(data) {
     const errors = {};
   
